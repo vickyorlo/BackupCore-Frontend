@@ -204,7 +204,7 @@
             this.submitButton.Name = "submitButton";
             this.submitButton.Size = new System.Drawing.Size(159, 23);
             this.submitButton.TabIndex = 15;
-            this.submitButton.Text = "Save currentProfile";
+            this.submitButton.Text = "Save to profile";
             this.submitButton.UseVisualStyleBackColor = true;
             this.submitButton.Click += new System.EventHandler(this.submitButton_Click);
             // 
@@ -341,7 +341,7 @@
             this.Controls.Add(this.pickFileButton);
             this.Controls.Add(this.panel1);
             this.Name = "Form1";
-            this.Text = "Form1";
+            this.Text = "BackupCore";
             ((System.ComponentModel.ISupportInitialize)(this.copiesNumericUpDown)).EndInit();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();

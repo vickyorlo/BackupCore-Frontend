@@ -23,10 +23,13 @@ namespace BackupCore_Frontend
             currentProfile = new BackupProfile();
             handler = new ConfigHandler();
             profilesListBox.DataSource = PopulateProfileList();
+            UpdateViewFromAction(currentProfile);
+
         }
 
         private List<BackupProfile> PopulateProfileList()
         {
+            profilesListBox.SelectedIndex = -1;
             if (!System.IO.Directory.Exists("./profiles")) System.IO.Directory.CreateDirectory("./profiles");
             return System.IO.Directory.EnumerateFiles("./profiles")
                 .Select(path => handler.OpenConfigFile(path)).ToList();
@@ -39,6 +42,13 @@ namespace BackupCore_Frontend
                 pickConfigDialog.ShowDialog();
 
                 currentProfile = handler.OpenConfigFile(pickConfigDialog.FileName);
+                if (currentProfile == null)
+                {
+                    currentProfile = new BackupProfile();
+                    throw new ArgumentException(
+                    "Configuration file either does not exist or is invalid! Check the examples.");
+                }
+
                 UpdateViewFromAction(currentProfile);
             }
             catch (Exception exception)
@@ -57,6 +67,7 @@ namespace BackupCore_Frontend
             if (backupProfile.Comparator == "byhash") comparatorComboBox.SelectedIndex = 1;
             copiesNumericUpDown.Value = backupProfile.BackupCopies;
             archiveYes.Checked = backupProfile.Archive;
+            archiveNo.Checked = !backupProfile.Archive;
             passwordTextBox.Text = backupProfile.ArchivePassword;
 
             sourcesTextBox.Lines = backupProfile.SourcePath;
@@ -127,12 +138,11 @@ namespace BackupCore_Frontend
 
         private void SaveConfig(bool ask)
         {
-            if (handler.SaveConfigToFile("./profiles/" + currentProfile.ActionName + ".ini", currentProfile, ask))
-            UpdateViewFromAction(currentProfile);
-            int index = profilesListBox.SelectedIndex;
+            if (!handler.SaveConfigToFile("./profiles/" + currentProfile.ActionName + ".ini", currentProfile,
+                ask)) return;
+            string profile = currentProfile.ToString();
             profilesListBox.DataSource = PopulateProfileList();
-            profilesListBox.SelectedIndex = index == -1? 0: index;
-
+            profilesListBox.SelectedItem = ((List<BackupProfile>) profilesListBox.DataSource).Find((s) =>s.ActionName == profile);
         }
 
         private void sourcesTextBox_TextChanged(object sender, EventArgs e)
@@ -147,18 +157,19 @@ namespace BackupCore_Frontend
 
         private void profilesListBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            UpdateViewFromAction(profilesListBox.SelectedIndex == -1? new BackupProfile() : profilesListBox.SelectedItem as BackupProfile);
+            if (profilesListBox.SelectedIndex >= 0) UpdateViewFromAction(profilesListBox.SelectedItem as BackupProfile);
+            //UpdateViewFromAction(profilesListBox.SelectedIndex == -1? new BackupProfile() : profilesListBox.SelectedItem as BackupProfile);
         }
 
         private async void startBackupButton_Click(object sender, EventArgs e)
         {
             consoleOutputTextBox.Text = "";
-            SaveConfig(false);
             ProcessStartInfo start = new ProcessStartInfo
             {
                 Arguments = "./profiles/" + currentProfile.ActionName + ".ini",
                 UseShellExecute = false,
                 RedirectStandardOutput = true,
+                RedirectStandardError = true,
                 CreateNoWindow = true,
                 //RedirectStandardInput = true,
                 FileName = ".\\BackupCore.exe",
@@ -184,7 +195,10 @@ namespace BackupCore_Frontend
             using (Process proc = Process.Start(start))
             {
                 proc.OutputDataReceived += (s, eargs) => SetConsoleOutputText(eargs.Data);
+                proc.ErrorDataReceived += (s, eargs) => SetConsoleOutputText(eargs.Data);
+
                 proc.BeginOutputReadLine();
+                proc.BeginErrorReadLine();
                 proc.WaitForExit();
 
                 // Retrieve the app's exit code
@@ -211,16 +225,15 @@ namespace BackupCore_Frontend
 
         private void newButton_Click(object sender, EventArgs e)
         {
-            if (!currentProfile.Locked && currentProfile.ActionName != "") SaveConfig(true);
+            profilesListBox.SelectedIndex = -1;
             currentProfile = new BackupProfile();
             UpdateViewFromAction(currentProfile);
         }
 
         private void deleteButton_Click(object sender, EventArgs e)
         {
-            System.IO.File.Delete("./profiles/" + currentProfile + ".ini");
-            System.IO.File.Delete("./" + currentProfile + ".db");
-
+            System.IO.File.Delete("./profiles/" + profilesListBox.SelectedItem + ".ini");
+            System.IO.File.Delete("./" + profilesListBox.SelectedItem + ".db");
             profilesListBox.DataSource = PopulateProfileList();
         }
     }

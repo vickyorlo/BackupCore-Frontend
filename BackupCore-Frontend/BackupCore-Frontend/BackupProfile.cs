@@ -3,12 +3,12 @@
     class BackupProfile
     {
         public string ActionName;
-        public string[] SourcePath;
-        public string[] DestinationPath;
+        public string[] SourcePath = new string[] { "" };
+        public string[] DestinationPath = new string[] { "" };
         public string Mode = "database";
         public string Comparator = "bydate";
-        public int BackupCopies;
-        public bool Archive;
+        public int BackupCopies = 0;
+        public bool Archive = false;
         public string ArchivePassword = "";
         public bool Locked = false;
 

@@ -34,8 +34,7 @@ namespace BackupCore_Frontend
             catch (Exception e)
             {
                 Console.Error.Write(e);
-                throw new ArgumentException(
-                    "Configuration file either does not exist or is invalid! Check the examples.");
+                return null;
             }
         }
 
@@ -68,7 +67,14 @@ namespace BackupCore_Frontend
         public bool SaveConfigToFile(string path, BackupProfile config, bool ask = true)
         {
             if (File.Exists(path) && ask && MessageBox.Show("Do you wish to overwrite existing profile?", "Overwrite?", MessageBoxButtons.YesNo) == DialogResult.No) return false;
-            using (StreamWriter writer = new StreamWriter(path,false))
+            if (string.IsNullOrEmpty(config.ActionName) ||
+                config.DestinationPath == null || config.SourcePath == null ||
+                config.DestinationPath.Length == 0 || config.SourcePath.Length == 0)
+            {
+                MessageBox.Show("Error in profile!");
+                return false;
+            }
+            using (var writer = new StreamWriter(path,false))
             {
                 writer.Write(ParseAction(config));
             }

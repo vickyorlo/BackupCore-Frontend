@@ -1,12 +1,12 @@
 {
   "runtimeTarget": {
-    "name": ".NETCoreApp,Version=v2.0/win7-x64",
-    "signature": "73576ea62f4d49ba09060816f07fe67c3a022ea5"
+    "name": ".NETCoreApp,Version=v2.0/win-x64",
+    "signature": "2f8f68a9e4fcf8dfca6301378409d7df8a33df70"
   },
   "compilationOptions": {},
   "targets": {
     ".NETCoreApp,Version=v2.0": {},
-    ".NETCoreApp,Version=v2.0/win7-x64": {
+    ".NETCoreApp,Version=v2.0/win-x64": {
       "BackupCore/1.0.0": {
         "dependencies": {
           "CommandLineParser": "2.1.1-beta",
@@ -497,7 +497,6 @@
           "System.Private.Uri": "4.0.1"
         }
       },
-      "runtime.win7.System.Private.Uri/4.0.1": {},
       "SQLitePCLRaw.bundle_green/1.1.7": {
         "dependencies": {
           "SQLitePCLRaw.core": "1.1.7",
@@ -521,11 +520,7 @@
       },
       "SQLitePCLRaw.lib.e_sqlite3.linux/1.1.7": {},
       "SQLitePCLRaw.lib.e_sqlite3.osx/1.1.7": {},
-      "SQLitePCLRaw.lib.e_sqlite3.v110_xp/1.1.7": {
-        "native": {
-          "runtimes/win7-x64/native/e_sqlite3.dll": {}
-        }
-      },
+      "SQLitePCLRaw.lib.e_sqlite3.v110_xp/1.1.7": {},
       "SQLitePCLRaw.provider.e_sqlite3.netstandard11/1.1.7": {
         "dependencies": {
           "NETStandard.Library": "2.0.0",
@@ -647,8 +642,7 @@
       "System.Private.Uri/4.0.1": {
         "dependencies": {
           "Microsoft.NETCore.Platforms": "2.0.0",
-          "Microsoft.NETCore.Targets": "1.0.1",
-          "runtime.win7.System.Private.Uri": "4.0.1"
+          "Microsoft.NETCore.Targets": "1.0.1"
         }
       },
       "System.Reflection/4.1.0": {
@@ -1117,13 +1111,6 @@
       "sha512": "sha512-U3F/M+djxVXuKJaoW2AGpAE2ZWAp372140jsX4d/ctqki+Qb61HuyQY4yUPSA/gdKGbbq6HXzZ6oxB6/G3MYPA==",
       "path": "runtime.win.system.runtime.extensions/4.1.0",
       "hashPath": "runtime.win.system.runtime.extensions.4.1.0.nupkg.sha512"
-    },
-    "runtime.win7.System.Private.Uri/4.0.1": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-LPOuwNel9nJ+G751J/yb64zkodFzVUwYYukQ8vysjiHRBrnvsZOhIxvqKhG6od1szrBNkl8pw8VGvvcfQ/2VOA==",
-      "path": "runtime.win7.system.private.uri/4.0.1",
-      "hashPath": "runtime.win7.system.private.uri.4.0.1.nupkg.sha512"
     },
     "SQLitePCLRaw.bundle_green/1.1.7": {
       "type": "package",
