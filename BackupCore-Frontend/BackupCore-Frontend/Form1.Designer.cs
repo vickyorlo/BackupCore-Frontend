@@ -57,6 +57,9 @@
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.newButton = new System.Windows.Forms.Button();
             this.deleteButton = new System.Windows.Forms.Button();
+            this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
+            this.addSourceButton = new System.Windows.Forms.Button();
+            this.addDestinationButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.copiesNumericUpDown)).BeginInit();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
@@ -225,11 +228,11 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(519, 13);
+            this.label7.Location = new System.Drawing.Point(441, 11);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(46, 13);
+            this.label7.Size = new System.Drawing.Size(110, 13);
             this.label7.TabIndex = 17;
-            this.label7.Text = "Sources";
+            this.label7.Text = "Sources (one per line)";
             // 
             // panel1
             // 
@@ -252,11 +255,11 @@
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(714, 13);
+            this.label8.Location = new System.Drawing.Point(647, 11);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(65, 13);
+            this.label8.Size = new System.Drawing.Size(129, 13);
             this.label8.TabIndex = 20;
-            this.label8.Text = "Destinations";
+            this.label8.Text = "Destinations (one per line)";
             // 
             // profilesListBox
             // 
@@ -312,11 +315,33 @@
             this.deleteButton.UseVisualStyleBackColor = true;
             this.deleteButton.Click += new System.EventHandler(this.deleteButton_Click);
             // 
+            // addSourceButton
+            // 
+            this.addSourceButton.Location = new System.Drawing.Point(566, 6);
+            this.addSourceButton.Name = "addSourceButton";
+            this.addSourceButton.Size = new System.Drawing.Size(75, 23);
+            this.addSourceButton.TabIndex = 27;
+            this.addSourceButton.Text = "Add...";
+            this.addSourceButton.UseVisualStyleBackColor = true;
+            this.addSourceButton.Click += new System.EventHandler(this.addSourceButton_Click);
+            // 
+            // addDestinationButton
+            // 
+            this.addDestinationButton.Location = new System.Drawing.Point(772, 6);
+            this.addDestinationButton.Name = "addDestinationButton";
+            this.addDestinationButton.Size = new System.Drawing.Size(75, 23);
+            this.addDestinationButton.TabIndex = 28;
+            this.addDestinationButton.Text = "Add...";
+            this.addDestinationButton.UseVisualStyleBackColor = true;
+            this.addDestinationButton.Click += new System.EventHandler(this.addDestinationButton_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(859, 454);
+            this.Controls.Add(this.addDestinationButton);
+            this.Controls.Add(this.addSourceButton);
             this.Controls.Add(this.deleteButton);
             this.Controls.Add(this.newButton);
             this.Controls.Add(this.consoleOutputTextBox);
@@ -380,6 +405,9 @@
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
         private System.Windows.Forms.Button newButton;
         private System.Windows.Forms.Button deleteButton;
+        private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
+        private System.Windows.Forms.Button addSourceButton;
+        private System.Windows.Forms.Button addDestinationButton;
     }
 }
 

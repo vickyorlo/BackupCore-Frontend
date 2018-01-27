@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Windows.Forms.VisualStyles;
 
 namespace BackupCore_Frontend
 {
@@ -23,8 +24,8 @@ namespace BackupCore_Frontend
             currentProfile = new BackupProfile();
             handler = new ConfigHandler();
             profilesListBox.DataSource = PopulateProfileList();
-            UpdateViewFromAction(currentProfile);
 
+            //UpdateViewFromAction(currentProfile);
         }
 
         private List<BackupProfile> PopulateProfileList()
@@ -70,14 +71,13 @@ namespace BackupCore_Frontend
             archiveNo.Checked = !backupProfile.Archive;
             passwordTextBox.Text = backupProfile.ArchivePassword;
 
+
             sourcesTextBox.Lines = backupProfile.SourcePath;
             destinationsTextBox.Lines = backupProfile.DestinationPath;
 
-            profileNameTextBox.Enabled = passwordTextBox.Enabled =
-                sourcesTextBox.Enabled = destinationsTextBox.Enabled =
-                    modeComboBox.Enabled = comparatorComboBox.Enabled =
-                        copiesNumericUpDown.Enabled = archiveYes.Enabled =
-                            archiveNo.Enabled = submitButton.Enabled = !backupProfile.Locked;
+            profileNameTextBox.Enabled = sourcesTextBox.Enabled =
+                destinationsTextBox.Enabled = modeComboBox.Enabled =
+                comparatorComboBox.Enabled = copiesNumericUpDown.Enabled = !backupProfile.Locked;
 
 
         }
@@ -136,13 +136,14 @@ namespace BackupCore_Frontend
             SaveConfig(true);
         }
 
-        private void SaveConfig(bool ask)
+        private bool SaveConfig(bool ask)
         {
             if (!handler.SaveConfigToFile("./profiles/" + currentProfile.ActionName + ".ini", currentProfile,
-                ask)) return;
+                ask)) return false;
             string profile = currentProfile.ToString();
             profilesListBox.DataSource = PopulateProfileList();
             profilesListBox.SelectedItem = ((List<BackupProfile>) profilesListBox.DataSource).Find((s) =>s.ActionName == profile);
+            return true;
         }
 
         private void sourcesTextBox_TextChanged(object sender, EventArgs e)
@@ -157,12 +158,20 @@ namespace BackupCore_Frontend
 
         private void profilesListBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (profilesListBox.SelectedIndex >= 0) UpdateViewFromAction(profilesListBox.SelectedItem as BackupProfile);
+            if (profilesListBox.SelectedIndex >= 0)
+            {
+                currentProfile = profilesListBox.SelectedItem as BackupProfile;
+                UpdateViewFromAction(currentProfile);
+            }
             //UpdateViewFromAction(profilesListBox.SelectedIndex == -1? new BackupProfile() : profilesListBox.SelectedItem as BackupProfile);
         }
 
         private async void startBackupButton_Click(object sender, EventArgs e)
         {
+            if (!SaveConfig(false))
+            {
+                MessageBox.Show("Action cancelled.");
+            }
             consoleOutputTextBox.Text = "";
             ProcessStartInfo start = new ProcessStartInfo
             {
@@ -182,7 +191,7 @@ namespace BackupCore_Frontend
                 : "Program exited with errors, check the log!");
             if (currentProfile.Mode == "database" && currentProfile.Locked == false && exitCode == 0)
             {
-                MessageBox.Show("This profile will now be locked for edition due to being a database backup.",
+                MessageBox.Show("Certain options in this profile will be locked due to it being a database backup.",
                     "Warning");
                 currentProfile.Locked = true;
                 UpdateViewFromAction(currentProfile);
@@ -235,6 +244,26 @@ namespace BackupCore_Frontend
             System.IO.File.Delete("./profiles/" + profilesListBox.SelectedItem + ".ini");
             System.IO.File.Delete("./" + profilesListBox.SelectedItem + ".db");
             profilesListBox.DataSource = PopulateProfileList();
+        }
+
+        private void addSourceButton_Click(object sender, EventArgs e)
+        {
+            if (folderBrowserDialog1.ShowDialog() == DialogResult.OK)
+            {
+                sourcesTextBox.Text += (sourcesTextBox.Text == "" || sourcesTextBox.Text[sourcesTextBox.Text.Length-1] == '\n')
+                    ? (folderBrowserDialog1.SelectedPath)
+                    : ("\r\n" + folderBrowserDialog1.SelectedPath);
+            }
+        }
+
+        private void addDestinationButton_Click(object sender, EventArgs e)
+        {
+            if (folderBrowserDialog1.ShowDialog() == DialogResult.OK)
+            {
+                destinationsTextBox.Text += (destinationsTextBox.Text == "" || destinationsTextBox.Text[destinationsTextBox.Text.Length-1] == '\n')
+                    ? (folderBrowserDialog1.SelectedPath)
+                    : ("\r\n" + folderBrowserDialog1.SelectedPath);
+            }
         }
     }
 }
